@@ -10,6 +10,11 @@ import { checkoutSlice, demoServices } from "../features/checkout/slice";
 import { authSlice } from "../features/auth/slice";
 import { mockAuthAdapter } from "../features/auth/adapter";
 import { ordersSlice } from "../features/orders/slice";
+import { accountSlice } from "../features/account/slice";
+import {
+  persistAccount,
+  restoreAccount,
+} from "../features/account/persistence";
 
 // Add feature slices here as they are implemented.
 const rootReducer = combineSlices(
@@ -18,6 +23,7 @@ const rootReducer = combineSlices(
   checkoutSlice,
   authSlice,
   ordersSlice,
+  accountSlice,
 );
 
 export const store = configureStore({
@@ -58,3 +64,46 @@ if (typeof window !== "undefined") saveCart();
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+let previousCustomerId: string | null = null;
+let previousAccount = store.getState().account;
+let previousProfile = store.getState().auth.profile;
+let accountStorageFailed = false;
+const accountListeners = new Set<() => void>();
+export const subscribeAccountPersistence = (listener: () => void) => {
+  accountListeners.add(listener);
+  return () => {
+    accountListeners.delete(listener);
+  };
+};
+export const getAccountPersistenceSnapshot = () => accountStorageFailed;
+store.subscribe(() => {
+  const { auth, account } = store.getState();
+  if (auth.customerId !== previousCustomerId) {
+    previousCustomerId = auth.customerId;
+    previousAccount = account;
+    previousProfile = auth.profile;
+    if (auth.customerId && auth.profile) {
+      const restored = restoreAccount(auth.customerId, browserStorage());
+      store.dispatch(accountSlice.actions.restored(restored.account));
+      if (restored.profile)
+        store.dispatch(authSlice.actions.restoreProfile(restored.profile));
+    }
+    return;
+  }
+  if (
+    !auth.customerId ||
+    !auth.profile ||
+    (account === previousAccount && auth.profile === previousProfile)
+  )
+    return;
+  previousAccount = account;
+  previousProfile = auth.profile;
+  accountStorageFailed = !persistAccount(
+    auth.customerId,
+    account,
+    auth.profile,
+    browserStorage(),
+  );
+  accountListeners.forEach((listener) => listener());
+});

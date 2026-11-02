@@ -1,4 +1,9 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useSyncExternalStore, type ReactNode } from "react";
+import {
+  subscribeAccountPersistence,
+  getAccountPersistenceSnapshot,
+  getServerPersistenceSnapshot,
+} from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import StoreHeader from "../StoreHeader";
 import StoreFooter from "../StoreFooter";
@@ -12,10 +17,15 @@ export default function AccountLayout({
   children,
 }: {
   title: string;
-  section: "overview" | "profile" | "orders";
+  section: "overview" | "profile" | "orders" | "addresses" | "settings";
   children: ReactNode;
 }) {
   const dispatch = useAppDispatch();
+  const storageFailed = useSyncExternalStore(
+    subscribeAccountPersistence,
+    getAccountPersistenceSnapshot,
+    getServerPersistenceSnapshot,
+  );
   const customerId = useAppSelector(selectCustomerId);
   const status = useAppSelector((state) => state.orders?.status ?? "idle");
   useEffect(() => {
@@ -68,6 +78,18 @@ export default function AccountLayout({
               Order history
             </a>
             <a href="/catalogue">Continue shopping</a>
+            <a
+              href="/account/addresses"
+              aria-current={section === "addresses" ? "page" : undefined}
+            >
+              Saved addresses
+            </a>
+            <a
+              href="/account/settings"
+              aria-current={section === "settings" ? "page" : undefined}
+            >
+              Account settings
+            </a>
             <button
               className="clear-button"
               onClick={() => {
@@ -78,7 +100,21 @@ export default function AccountLayout({
               Log out
             </button>
           </nav>
-          <div className="account-content">{children}</div>
+          <div className="account-content">
+            <p className="muted">
+              Use fictional details only. Profile, addresses and preferences are
+              stored on this browser without encryption. Sign in with your
+              original demo login email after refresh to retrieve them, even
+              after editing your contact email.
+            </p>
+            {storageFailed && (
+              <p role="alert">
+                Browser storage is unavailable. Changes apply for this visit
+                only.
+              </p>
+            )}
+            {children}
+          </div>
         </div>
       </main>
       <StoreFooter />

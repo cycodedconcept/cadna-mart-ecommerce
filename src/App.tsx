@@ -8,6 +8,8 @@ import PurchasePage from "./pages/PurchasePage";
 import AuthPage from "./pages/AuthPage";
 import PasswordResetSuccessPage from "./pages/PasswordResetSuccessPage";
 import AccountPage from "./pages/AccountPage";
+import AddressesPage from "./pages/AddressesPage";
+import SettingsPage from "./pages/SettingsPage";
 import OrdersPage from "./pages/OrdersPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -70,6 +72,10 @@ function App() {
         <OrdersPage />
       ) : path.startsWith("/account/orders/") ? (
         <OrderDetailsPage key={path} orderId={path.split("/")[3]} />
+      ) : path === "/account/addresses" ? (
+        <AddressesPage />
+      ) : path === "/account/settings" ? (
+        <SettingsPage />
       ) : (
         <AccountPage key={path} edit={path === "/account/profile"} />
       )}

@@ -35,6 +35,9 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    restoreProfile(state, { payload }: PayloadAction<CustomerProfile>) {
+      if (state.profile) state.profile = cleanProfile(payload);
+    },
     started(
       state,
       {
