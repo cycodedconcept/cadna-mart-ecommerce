@@ -1,121 +1,127 @@
-import { useState } from 'react'
-import heroImg from '../assets/hero.png'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '../assets/vite.svg'
-
-function HomePage() {
-  const [count, setCount] = useState(0)
-
+import StoreHeader from "../components/StoreHeader";
+import StoreFooter from "../components/StoreFooter";
+import CategoryCard from "../components/catalogue/CategoryCard";
+import { categories as catalogueCategories } from "../features/catalogue/data";
+import { useState } from "react";
+import ProductSection from "../components/home/ProductSection";
+import { products } from "../features/catalogue/data";
+export default function HomePage() {
+  const [notice, setNotice] = useState("");
+  const filtered = (start: number, end: number) => products.slice(start, end);
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+      <StoreHeader />
+      <main id="main-content">
+        <h1 className="visually-hidden">
+          Cadna Mart ? Shop smarter. Delivered faster.
+        </h1>
+        <div className="container">
+          <a className="hero-banner" href="#deals">
+            <img
+              src="/images/hero.png"
+              alt="Welcome to Cadna Mart. Shop smarter. Delivered faster. Shop direct from manufacturers at unbeatable prices. Fast delivery across Nigeria. Shop now."
+            />
+          </a>
+          <div id="deals">
+            <ProductSection
+              title="Grab the best"
+              accent="deals"
+              products={filtered(0, 8)}
+            />
+          </div>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/pages/HomePage.tsx</code> and save to test <code>HMR</code>
-          </p>
+        <section className="categories-band" id="categories">
+          <div className="container">
+            <div className="section-heading">
+              <h2>
+                Shop From <span>Top Categories</span>
+              </h2>
+              <a href="/categories">View All ›</a>
+            </div>
+            <div className="category-grid">
+              {catalogueCategories.map((item) => (
+                <CategoryCard key={item.id} category={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+        <div className="container">
+          <ProductSection
+            title="Recommended Products"
+            accent="For You"
+            products={filtered(8, 14)}
+          />
+          <ProductSection
+            title="Featured Products"
+            accent="From Our Top Sellers"
+            products={filtered(14, 20)}
+          />
+          <a className="sale-banner" href="#arrivals">
+            <img
+              src="/images/flash-sale.png"
+              alt="Flash sale. Get up to 30% off selected kitchen and tools. Limited stock. Shop now."
+              loading="lazy"
+            />
+          </a>
+          <div id="arrivals">
+            <ProductSection
+              title="New"
+              accent="Arrivals"
+              products={filtered(20, 26)}
+            />
+          </div>
+          <section className="grow" id="grow">
+            <span className="eyebrow">PARTNERSHIP</span>
+            <h2>
+              Grow with <span>Cadna Mart</span>
+            </h2>
+            <p>
+              Grow, sell, and invest with Cadna Mart — your gateway to
+              <br /> opportunity and lasting impact.
+            </p>
+            <div className="partner-grid">
+              <button
+                onClick={() =>
+                  setNotice(
+                    "Seller registration is planned for a future milestone.",
+                  )
+                }
+              >
+                <img
+                  src="/images/sell.png"
+                  alt="Sell more. Grow more. Reach thousands of customers. Start selling."
+                  loading="lazy"
+                />
+              </button>
+              <button
+                onClick={() =>
+                  setNotice(
+                    "Partner registration is planned for a future milestone.",
+                  )
+                }
+              >
+                <img
+                  src="/images/partner.png"
+                  alt="Partner with Cadna Mart. Be part of our growth journey. Earn as an investor."
+                  loading="lazy"
+                />
+              </button>
+            </div>
+          </section>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      </main>
+      <StoreFooter />
+      {notice && (
+        <div className="notice" role="status">
+          {notice}
+          <button
+            onClick={() => setNotice("")}
+            aria-label="Dismiss notification"
+          >
+            ×
+          </button>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      )}
     </>
-  )
+  );
 }
-
-export default HomePage

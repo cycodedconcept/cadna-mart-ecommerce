@@ -73,3 +73,19 @@ export default defineConfig([
 ])
 
 ```
+
+## Product catalogue milestone
+
+See [MILESTONE-2.md](MILESTONE-2.md) for routes, architecture, changes, validation, limitations, manual QA and the prepared PR description. Use Node 24+ for `npm test`; run `npm run typecheck`, `npm run lint`, and `npm run build` for validation. Configure an SPA fallback to `index.html` for deep links.
+
+## Shopping cart and checkout milestone
+
+See [MILESTONE-3.md](MILESTONE-3.md) for cart/checkout routes, state, files, validation, limitations, manual review and the prepared PR summary. Checkout is a local demonstration; no live order or payment is made.
+
+## Customer authentication and account milestone
+
+See [MILESTONE-4.md](MILESTONE-4.md) for demo registration/login/recovery, protected account/profile routes, credential handling, session behaviour, tests and PR preparation. Demo authentication and profile edits are memory-only; refresh ends the session while the shopping cart remains persisted.
+
+## Customer order history milestone
+
+See [MILESTONE-5.md](MILESTONE-5.md) for persistent demo order history, account statistics, routes, data isolation, checkout integration, validation and PR preparation. Refresh ends the demo session; sign in with the same fictional login email to retrieve saved orders. Persisted order history uses fictional delivery details and excludes entered customer/contact information.
