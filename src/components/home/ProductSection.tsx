@@ -7,12 +7,12 @@ interface Props {
 }
 export default function ProductSection({ title, accent, products }: Props) {
   return (
-    <section className="product-section" aria-label={title}>
+    <section className="product-section" aria-label={`${title} ${accent}`}>
       <div className="section-heading">
         <h2>
           {title} <span>{accent}</span>
         </h2>
-        <a href="/catalogue">View All ?</a>
+        <a href="/catalogue">View All ›</a>
       </div>
       {products.length ? (
         <div className="product-grid">
