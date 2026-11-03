@@ -45,9 +45,13 @@ export default function StoreFooter() {
           <div className="footer-grid">
             <div>
               <img
-                className="brand-logo"
-                src="/images/logo.png"
+                className="footer-logo"
+                src="/images/footer-logo.png"
                 alt="Cadna Mart"
+                width={217}
+                height={80}
+                loading="lazy"
+                decoding="async"
               />
               <p>
                 Cadna Mart is your trusted hybrid e-commerce platform. Sourcing

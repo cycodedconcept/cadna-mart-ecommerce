@@ -334,6 +334,13 @@ footer {
   gap: 70px;
   padding-bottom: 65px;
 }
+.footer-logo {
+  display: block;
+  width: clamp(150px, 16vw, 190px);
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 .footer-grid p {
   max-width: 260px;
   font-size: 12px;
