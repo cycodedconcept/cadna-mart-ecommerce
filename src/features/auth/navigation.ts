@@ -5,6 +5,13 @@ const protectedPaths = [
   "/account/addresses",
   "/account/settings",
 ];
+// React rechecks the URL after subscribing, catching redirects from child mount
+// effects even when those effects run before the router's subscription.
+export const getLocationSnapshot = () => location.pathname + location.search;
+export function subscribeLocation(listener: () => void) {
+  window.addEventListener("popstate", listener);
+  return () => window.removeEventListener("popstate", listener);
+}
 export const isProtectedPath = (path: string) =>
   protectedPaths.includes(path) ||
   /^\/account\/orders\/[A-Za-z0-9-]{1,100}$/.test(path);
