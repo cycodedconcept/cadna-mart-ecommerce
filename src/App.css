@@ -1540,3 +1540,42 @@ textarea:focus-visible {
     text-align: right;
   }
 }
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 20px;
+}
+.address-card {
+  overflow-wrap: anywhere;
+}
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.account-actions button:not(.primary-button) {
+  padding: 10px 14px;
+  border: 1px solid #cbc5df;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+}
+.preference-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+.preference-control input {
+  width: 20px;
+  height: 20px;
+}
+.account-content > .profile-panel + .profile-panel {
+  margin-top: 24px;
+}
+.checkout-form select {
+  max-width: 100%;
+  padding: 12px;
+}

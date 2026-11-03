@@ -103,7 +103,7 @@ function ProfileForm({ profile }: { profile: CustomerProfile }) {
           )}
         <p role="status">
           {saved
-            ? "Demo profile updated for this visit."
+            ? "Demo profile updated. Browser storage availability is shown above."
             : busy
               ? "Saving changes…"
               : ""}
@@ -116,7 +116,8 @@ function ProfileForm({ profile }: { profile: CustomerProfile }) {
       </form>
       <p className="muted">
         For a simulated save failure, use fail@example.com. Changes are kept
-        only in memory.
+        locally in this browser when storage is available. Use fictional details
+        only.
       </p>
     </section>
   );
