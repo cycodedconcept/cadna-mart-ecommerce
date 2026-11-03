@@ -91,3 +91,7 @@ See [MILESTONE-5.md](MILESTONE-5.md) for persistent demo order history, account 
 ## Customer profile, addresses and settings milestone
 
 See [MILESTONE-6.md](MILESTONE-6.md) for saved profiles, address management, preferences, checkout integration, test results and deferred backend work. Profile edits now persist locally alongside addresses and preferences; this supersedes the memory-only profile behavior described in Milestone 4. Refresh still ends the demo session. Use fictional data and sign in with the original demo login email to restore account data, including after editing the profile contact email. Password changes remain unavailable. The prepared PR description is in [MILESTONE-6-PR.md](MILESTONE-6-PR.md).
+
+## API integration audit
+
+Milestone 7 is blocked on verified commerce API contracts. See [MILESTONE-7.md](MILESTONE-7.md) for the repository audit, integration matrix, discovery evidence, validation and implementation plan, and [MILESTONE-7-PR.md](MILESTONE-7-PR.md) for the draft PR description. Existing demo behavior remains in use; no live API or API environment variable is configured.
