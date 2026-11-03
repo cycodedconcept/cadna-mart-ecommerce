@@ -7,6 +7,17 @@ import {
   type CustomerInfo,
 } from "../features/checkout/slice";
 import OrderSummary from "../components/cart/OrderSummary";
+import { selectCustomer, selectCustomerId } from "../features/auth/slice";
+
+export default function CheckoutPage() {
+  const customerId = useAppSelector(selectCustomerId);
+  const profile = useAppSelector(selectCustomer);
+  return (
+    <CheckoutForm
+      key={`${customerId ?? "guest"}:${profile?.fullName}:${profile?.email}:${profile?.phone}`}
+    />
+  );
+}
 
 const fields: {
   name: keyof CustomerInfo;
@@ -30,17 +41,24 @@ const fields: {
   { name: "city", label: "City", autoComplete: "address-level2" },
   { name: "state", label: "State", autoComplete: "address-level1" },
 ];
-export default function CheckoutPage() {
+function CheckoutForm() {
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart);
   const checkout = useAppSelector((state) => state.checkout);
+  const profile = useAppSelector(selectCustomer);
+  const account = useAppSelector((state) => state.account);
+  const addresses = profile ? (account?.addresses ?? []) : [];
+  const defaultAddress = addresses.find(
+    (item) => item.id === account?.defaultId,
+  );
+  const [selectedId, setSelectedId] = useState(defaultAddress?.id ?? "");
   const [customer, setCustomer] = useState<CustomerInfo>({
-    fullName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
+    fullName: profile?.fullName ?? "",
+    email: profile?.email ?? "",
+    phone: profile?.phone ?? "",
+    address: defaultAddress?.address ?? "",
+    city: defaultAddress?.city ?? "",
+    state: defaultAddress?.state ?? "",
     instructions: "",
   });
   const [errors, setErrors] = useState<CheckoutErrors>({});
@@ -86,6 +104,38 @@ export default function CheckoutPage() {
           >
             <fieldset disabled={submitting}>
               <legend>Customer & delivery information</legend>
+              {profile && (
+                <div className="form-field">
+                  <label htmlFor="saved-address">Saved delivery address</label>
+                  <select
+                    id="saved-address"
+                    value={selectedId}
+                    onChange={(event) => {
+                      const id = event.target.value;
+                      setSelectedId(id);
+                      const item = addresses.find(
+                        (address) => address.id === id,
+                      );
+                      setCustomer({
+                        ...customer,
+                        address: item?.address ?? "",
+                        city: item?.city ?? "",
+                        state: item?.state ?? "",
+                      });
+                      setErrors({});
+                    }}
+                  >
+                    <option value="">Enter a new address</option>
+                    {addresses.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.label}
+                        {item.id === account?.defaultId ? " (default)" : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <a href="/account/addresses">Manage saved addresses</a>
+                </div>
+              )}
               {fields.map((field) => (
                 <div className="form-field" key={field.name}>
                   <label htmlFor={field.name}>
@@ -103,12 +153,14 @@ export default function CheckoutPage() {
                     aria-describedby={
                       errors[field.name] ? `${field.name}-error` : undefined
                     }
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      if (["address", "city", "state"].includes(field.name))
+                        setSelectedId("");
                       setCustomer({
                         ...customer,
                         [field.name]: event.target.value,
-                      })
-                    }
+                      });
+                    }}
                   />
                   {errors[field.name] && (
                     <p className="field-error" id={`${field.name}-error`}>

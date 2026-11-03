@@ -17,9 +17,9 @@ If you are developing a production application, we recommend updating the config
 
 ```js
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       // Other configs...
 
@@ -34,44 +34,42 @@ export default defineConfig([
     ],
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
         tsconfigRootDir: import.meta.dirname,
       },
       // other options...
     },
   },
-])
-
+]);
 ```
 
 You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from "eslint-plugin-react-x";
+import reactDom from "eslint-plugin-react-dom";
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       // Other configs...
       // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
+      reactX.configs["recommended-typescript"],
       // Enable lint rules for React DOM
       reactDom.configs.recommended,
     ],
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
         tsconfigRootDir: import.meta.dirname,
       },
       // other options...
     },
   },
-])
-
+]);
 ```
 
 ## Product catalogue milestone
@@ -89,3 +87,7 @@ See [MILESTONE-4.md](MILESTONE-4.md) for demo registration/login/recovery, prote
 ## Customer order history milestone
 
 See [MILESTONE-5.md](MILESTONE-5.md) for persistent demo order history, account statistics, routes, data isolation, checkout integration, validation and PR preparation. Refresh ends the demo session; sign in with the same fictional login email to retrieve saved orders. Persisted order history uses fictional delivery details and excludes entered customer/contact information.
+
+## Customer profile, addresses and settings milestone
+
+See [MILESTONE-6.md](MILESTONE-6.md) for saved profiles, address management, preferences, checkout integration, test results and deferred backend work. Profile edits now persist locally alongside addresses and preferences; this supersedes the memory-only profile behavior described in Milestone 4. Refresh still ends the demo session. Use fictional data and sign in with the original demo login email to restore account data, including after editing the profile contact email. Password changes remain unavailable. The prepared PR description is in [MILESTONE-6-PR.md](MILESTONE-6-PR.md).

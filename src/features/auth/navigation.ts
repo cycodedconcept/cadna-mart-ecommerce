@@ -1,4 +1,10 @@
-const protectedPaths = ["/account", "/account/profile", "/account/orders"];
+const protectedPaths = [
+  "/account",
+  "/account/profile",
+  "/account/orders",
+  "/account/addresses",
+  "/account/settings",
+];
 export const isProtectedPath = (path: string) =>
   protectedPaths.includes(path) ||
   /^\/account\/orders\/[A-Za-z0-9-]{1,100}$/.test(path);
