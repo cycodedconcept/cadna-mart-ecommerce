@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import HomePage from "./pages/HomePage";
 import CataloguePage from "./pages/CataloguePage";
 import CartPage from "./pages/CartPage";
@@ -13,14 +13,22 @@ import SettingsPage from "./pages/SettingsPage";
 import OrdersPage from "./pages/OrdersPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import { isProtectedPath, navigate } from "./features/auth/navigation";
+import {
+  getLocationSnapshot,
+  isProtectedPath,
+  navigate,
+  subscribeLocation,
+} from "./features/auth/navigation";
 import "./App.css";
 
 function App() {
-  const [url, setUrl] = useState(location.pathname + location.search);
+  const url = useSyncExternalStore(
+    subscribeLocation,
+    getLocationSnapshot,
+    getLocationSnapshot,
+  );
   const path = url.split("?")[0];
   useEffect(() => {
-    const update = () => setUrl(location.pathname + location.search);
     const followLink = (event: MouseEvent) => {
       if (
         event.defaultPrevented ||
@@ -59,10 +67,8 @@ function App() {
         else window.scrollTo(0, 0);
       });
     };
-    window.addEventListener("popstate", update);
     document.addEventListener("click", followLink);
     return () => {
-      window.removeEventListener("popstate", update);
       document.removeEventListener("click", followLink);
     };
   }, []);
