@@ -1,24 +1,127 @@
-import { useState } from 'react';
-import ProductSection from '../components/home/ProductSection';
-import { categories, products, type Category, type Product } from '../data/home';
+import StoreHeader from "../components/StoreHeader";
+import StoreFooter from "../components/StoreFooter";
+import CategoryCard from "../components/catalogue/CategoryCard";
+import { categories as catalogueCategories } from "../features/catalogue/data";
+import { useState } from "react";
+import ProductSection from "../components/home/ProductSection";
+import { products } from "../features/catalogue/data";
 export default function HomePage() {
-    const [query, setQuery] = useState('');
-    const [category, setCategory] = useState<Category | null>(null);
-    const [cart, setCart] = useState(0);
-    const [subscribed, setSubscribed] = useState(false);
-    const [notice, setNotice] = useState('');
-    const filtered = (start: number, end: number) => products.slice(start, end).filter(p => (!category || p.category === category) && p.name.toLowerCase().includes(query.toLowerCase()));
-    const add = (p: Product) => { setCart(c => c + 1); setNotice(`${p.name} added to your demo cart.`); };
-    return <>
- <nav className="category-nav container" aria-label="Main categories"><a href="#categories" onClick={() => setCategory(null)}>☰ All Categories</a>{['Electronics', 'Fashion', 'Home & Living', 'Beauty', 'Groceries', 'Gadgets'].map(name => <a key={name} href="#deals" onClick={() => setCategory(name as Category)}>{name}</a>)}<a href="#deals">Deals</a></nav>
- <div className="delivery-strip">Free Delivery on Orders Above ₦50,000 | <a href="#deals">Shop Now</a></div>
- <header className="store-header container"><a href="#" aria-label="Cadna Mart home" onClick={() => { setCategory(null); setQuery(''); }}><img className="brand-logo" src="/images/logo.png" alt="Cadna Mart"/></a><a className="header-partner" href="#grow">Sell on Cadna</a><a className="header-partner" href="#grow">Earn as a Partner</a><form className="search" role="search" onSubmit={e => { e.preventDefault(); document.getElementById('deals')?.scrollIntoView({ behavior: 'smooth' }); }}><input aria-label="Search products" placeholder="Search for products, brands and categories…" value={query} onChange={e => setQuery(e.target.value)}/><button aria-label="Search">⌕</button></form><button className="header-action" onClick={() => setNotice('Account features are planned for a future milestone.')}>♙ Account⌄</button><a className="header-action" href="#footer">ⓘ Help⌄</a><button className="header-action" onClick={() => setNotice(`Your demo cart contains ${cart} items.`)}>🛒 My Cart {cart > 0 && <b>{cart}</b>}</button></header>
- <main><h1 className="visually-hidden">Cadna Mart ? Shop smarter. Delivered faster.</h1><div className="container"><a className="hero-banner" href="#deals"><img src="/images/hero.png" alt="Welcome to Cadna Mart. Shop smarter. Delivered faster. Shop direct from manufacturers at unbeatable prices. Fast delivery across Nigeria. Shop now."/></a><div id="deals">{(category || query) && <div className="filter-status">Showing {category || 'all categories'}{query && ` matching “${query}”`}<button onClick={() => { setCategory(null); setQuery(''); }}>Clear filters ×</button></div>}<ProductSection title="Grab the best" accent="deals" products={filtered(0, 8)} onAdd={add}/></div></div>
- <section className="categories-band" id="categories"><div className="container"><div className="section-heading"><h2>Shop From <span>Top Categories</span></h2><a href="#deals" onClick={() => setCategory(null)}>View All ›</a></div><div className="category-grid">{categories.map((name, i) => <a className={category === name ? 'category active' : 'category'} href="#deals" key={name} onClick={() => setCategory(name)}><img src={`/images/category-${i}.png`} alt="" loading="lazy"/><span>{name}</span></a>)}</div></div></section>
- <div className="container"><ProductSection title="Recommended Products" accent="For You" products={filtered(8, 14)} onAdd={add}/><ProductSection title="Featured Products" accent="From Our Top Sellers" products={filtered(14, 20)} onAdd={add}/><a className="sale-banner" href="#arrivals"><img src="/images/flash-sale.png" alt="Flash sale. Get up to 30% off selected kitchen and tools. Limited stock. Shop now." loading="lazy"/></a><div id="arrivals"><ProductSection title="New" accent="Arrivals" products={filtered(20, 26)} onAdd={add}/></div>
- <section className="grow" id="grow"><span className="eyebrow">PARTNERSHIP</span><h2>Grow with <span>Cadna Mart</span></h2><p>Grow, sell, and invest with Cadna Mart — your gateway to<br /> opportunity and lasting impact.</p><div className="partner-grid"><button onClick={() => setNotice('Seller registration is planned for a future milestone.')}><img src="/images/sell.png" alt="Sell more. Grow more. Reach thousands of customers. Start selling." loading="lazy"/></button><button onClick={() => setNotice('Partner registration is planned for a future milestone.')}><img src="/images/partner.png" alt="Partner with Cadna Mart. Be part of our growth journey. Earn as an investor." loading="lazy"/></button></div></section></div>
- <section className="newsletter"><div className="container newsletter-inner"><div><h2>Stay Ahead with Cadna Mart</h2><p>Subscribe to receive exclusive deals, product launches, and<br /> insights — delivered straight to your inbox.</p><form onSubmit={e => { e.preventDefault(); setSubscribed(true); }}><label htmlFor="email">Stay up-to-date with us</label><div><input id="email" type="email" placeholder="Enter email" required aria-describedby="subscribe-result"/><button type="submit">Subscribe</button></div><p id="subscribe-result" role="status">{subscribed ? 'Thanks! Your subscription has been recorded for this demo.' : ''}</p></form></div><img src="/images/newsletter.png" alt="" loading="lazy"/></div></section></main>
- <footer id="footer"><div className="container"><div className="footer-grid"><div><img className="brand-logo" src="/images/logo.png" alt="Cadna Mart"/><p>Cadna Mart is your trusted hybrid e-commerce platform. Sourcing directly from manufacturers to bring you best prices.</p></div>{[['ABOUT US', 'About Cadna Mart', 'Careers', 'Privacy Policy', 'Terms & Conditions'], ['CUSTOMER SERVICE', 'Help Center', 'How to Shop', 'Delivery Options', 'Return Policy'], ['GROW WITH CADNA', 'Sell with Cadna', 'Become an Investor']].map(([title, ...links]) => <div key={title}><h3>{title}</h3>{links.map(link => <button key={link} onClick={() => setNotice(`${link} information is planned for a future milestone.`)}>{link}</button>)}</div>)}</div><div className="footer-bottom"><small>© {new Date().getFullYear()} CADNA MART. ALL RIGHTS RESERVED.</small><span>CADNA MART</span></div></div></footer>
- {notice && <div className="notice" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Dismiss notification">×</button></div>}
- </>;
+  const [notice, setNotice] = useState("");
+  const filtered = (start: number, end: number) => products.slice(start, end);
+  return (
+    <>
+      <StoreHeader />
+      <main id="main-content">
+        <h1 className="visually-hidden">
+          Cadna Mart ? Shop smarter. Delivered faster.
+        </h1>
+        <div className="container">
+          <a className="hero-banner" href="#deals">
+            <img
+              src="/images/hero.png"
+              alt="Welcome to Cadna Mart. Shop smarter. Delivered faster. Shop direct from manufacturers at unbeatable prices. Fast delivery across Nigeria. Shop now."
+            />
+          </a>
+          <div id="deals">
+            <ProductSection
+              title="Grab the best"
+              accent="deals"
+              products={filtered(0, 8)}
+            />
+          </div>
+        </div>
+        <section className="categories-band" id="categories">
+          <div className="container">
+            <div className="section-heading">
+              <h2>
+                Shop From <span>Top Categories</span>
+              </h2>
+              <a href="/categories">View All ›</a>
+            </div>
+            <div className="category-grid">
+              {catalogueCategories.map((item) => (
+                <CategoryCard key={item.id} category={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+        <div className="container">
+          <ProductSection
+            title="Recommended Products"
+            accent="For You"
+            products={filtered(8, 14)}
+          />
+          <ProductSection
+            title="Featured Products"
+            accent="From Our Top Sellers"
+            products={filtered(14, 20)}
+          />
+          <a className="sale-banner" href="#arrivals">
+            <img
+              src="/images/flash-sale.png"
+              alt="Flash sale. Get up to 30% off selected kitchen and tools. Limited stock. Shop now."
+              loading="lazy"
+            />
+          </a>
+          <div id="arrivals">
+            <ProductSection
+              title="New"
+              accent="Arrivals"
+              products={filtered(20, 26)}
+            />
+          </div>
+          <section className="grow" id="grow">
+            <span className="eyebrow">PARTNERSHIP</span>
+            <h2>
+              Grow with <span>Cadna Mart</span>
+            </h2>
+            <p>
+              Grow, sell, and invest with Cadna Mart — your gateway to
+              <br /> opportunity and lasting impact.
+            </p>
+            <div className="partner-grid">
+              <button
+                onClick={() =>
+                  setNotice(
+                    "Seller registration is planned for a future milestone.",
+                  )
+                }
+              >
+                <img
+                  src="/images/sell.png"
+                  alt="Sell more. Grow more. Reach thousands of customers. Start selling."
+                  loading="lazy"
+                />
+              </button>
+              <button
+                onClick={() =>
+                  setNotice(
+                    "Partner registration is planned for a future milestone.",
+                  )
+                }
+              >
+                <img
+                  src="/images/partner.png"
+                  alt="Partner with Cadna Mart. Be part of our growth journey. Earn as an investor."
+                  loading="lazy"
+                />
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+      <StoreFooter />
+      {notice && (
+        <div className="notice" role="status">
+          {notice}
+          <button
+            onClick={() => setNotice("")}
+            aria-label="Dismiss notification"
+          >
+            ×
+          </button>
+        </div>
+      )}
+    </>
+  );
 }
