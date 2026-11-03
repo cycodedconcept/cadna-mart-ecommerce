@@ -10,7 +10,7 @@ export default function ProductCard({ product }: { product: Product }) {
     <article className="product-card">
       <a href={`/products/${product.id}`}>
         <div className="product-image">
-          <img src={product.images[0]} alt={product.name} loading="lazy" />
+          <img src={product.images[0]} alt={product.name} loading="lazy" decoding="async" />
           {discount > 0 && <span className="discount">-{discount}%</span>}
         </div>
         <div className="product-copy">
