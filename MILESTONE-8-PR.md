@@ -10,4 +10,4 @@ Milestone 7 was not merged into develop. Its audit is cherry-picked into this br
 
 Runtime audit: zero vulnerabilities. Full audit: 12 moderate development-tool findings; no high/critical findings. Large PNGs and manual accessibility/cross-browser/preview checks remain follow-ups. No production deployment is authorized by this PR.
 
-Validation: lint, TypeScript (including browser specs), 72/72 Node tests, production build and 21/21 Chromium tests at 375/768/1440px passed. The initial browser run exposed an ambiguous stock locator, corrected before the final passing run. Hosted CI/preview and real commerce API integration remain unverified.
+Validation: lint, TypeScript (including browser specs), 72/72 Node tests, production build and 21/21 Chromium tests at 375/768/1440px passed. The initial browser run exposed an ambiguous stock locator, corrected before the final passing run. Hosted CI run 41626270369 succeeded for implementation commit bfccf18. Vercel reports the preview Ready, but Chromium smoke navigation redirects to Vercel login, blocking application checks. Real commerce API integration remains unverified.

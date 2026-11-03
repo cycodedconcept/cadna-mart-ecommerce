@@ -10,7 +10,7 @@ The stack remains React 19, TypeScript, Redux Toolkit and Vite 8 with a custom H
 
 Fetched origin. `origin/develop` remains `83554af`, includes Milestone 6, and **does not include** Milestone 7 audit commit `24a8245`. Created `feature/milestone-8-production-integration` from that develop base and cherry-picked the audit as `f32705d` so this review branch includes it. This does not merge Milestone 7 into develop. Milestone 7 contained discovery documentation, not implemented API integrations. The previous uncommitted Vercel refresh fix was preserved and completed as part of this readiness work.
 
-No GitHub Actions workflow or browser suite existed. Vercel configuration had only the uncommitted SPA fallback. The known deployment URL is user-supplied; dashboard connection/settings/logs are unverified. The web tool could not access its homepage or catalogue; that result is not evidence of an outage.
+No GitHub Actions workflow or browser suite existed. Vercel configuration had only the uncommitted SPA fallback. The known production URL is user-supplied. The web tool could not access its homepage or catalogue; that result is not evidence of an outage. Subsequent PR evidence confirms Vercel is connected; dashboard settings/logs remain uninspected.
 
 ## API verification matrix
 
@@ -55,7 +55,7 @@ Browser checks cover keyboard skip links, first-invalid-field focus, labels used
 
 ## Validation record
 
-The existing 72 Node tests passed after the router change; lint/typecheck and production build passed. Initial browser run completed 18 passing checks and three failures caused by a locator matching both an out-of-stock paragraph and button; corrected to assert the disabled stock button. Its sandbox cleanup stalled and was interrupted. The full corrected Chromium run completed successfully outside the sandbox: **21/21 passed in 1.2 minutes**, zero retries/skips. Reviewed mobile and desktop catalogue screenshots; layout and controls fit their viewports. Full-page capture can omit offscreen lazy images before scrolling, so it is not evidence of failed image delivery. Hosted CI and live preview/API validation have not been claimed.
+The existing 72 Node tests passed after the router change; lint/typecheck and production build passed. Initial browser run completed 18 passing checks and three failures caused by a locator matching both an out-of-stock paragraph and button; corrected to assert the disabled stock button. Its sandbox cleanup stalled and was interrupted. The full corrected Chromium run completed successfully outside the sandbox: **21/21 passed in 1.2 minutes**, zero retries/skips. Reviewed mobile and desktop catalogue screenshots; layout and controls fit their viewports. Full-page capture can omit offscreen lazy images before scrolling, so it is not evidence of failed image delivery. [Hosted CI run 41626270369](https://github.com/cycodedconcept/cadna-mart-ecommerce/actions/runs/41626270369) completed successfully for implementation commit `bfccf18`. Live commerce API validation remains blocked.
 
 | Command | Actual result |
 | --- | --- |
@@ -68,6 +68,12 @@ The existing 72 Node tests passed after the router change; lint/typecheck and pr
 | `npm.cmd audit --omit=dev --json` | Exit 0: zero runtime findings |
 | `git diff --check` | Passed |
 
+## Review delivery and preview result
+
+Pushed `feature/milestone-8-production-integration` with audit commit `f32705d` and implementation commit `bfccf18`. [Draft PR #12](https://github.com/cycodedconcept/cadna-mart-ecommerce/pull/12) targets `develop`. Vercel's PR comment reports a Ready [preview](https://cadna-mart-ecommerce-git-featur-a975c4-cyrils-projects-d2849141.vercel.app). Read-only Chromium navigation to its root redirected to `vercel.com/login`; hosting authentication blocks application smoke tests. The login page's HTTP 200 and headers cannot be attributed to this application. No access protection was changed or bypassed. An authorized reviewer must verify direct routes/refreshes and application response headers after signing into Vercel. No production release occurred.
+
+Files changed for readiness: `.github/workflows/ci.yml`, `.gitignore`, `README.md`, `package.json`, `package-lock.json`, `playwright.config.ts`, `tsconfig.node.json`, `e2e/customer-journey.spec.ts`, `vercel.json`, `src/App.tsx`, `src/features/auth/navigation.ts`, `src/components/catalogue/ProductCard.tsx`, `MILESTONE-8.md`, `MILESTONE-8-PR.md`, `docs/DEPLOYMENT.md`, and `docs/TESTING.md`. The carried Milestone 7 audit adds its two reports and README reference. No downloaded backend source, credential helper, test artifact or secret is committed.
+
 ## Handover and release gates
 
 - [x] Preserve Milestones 1–6 and carry Milestone 7 audit into review branch.
@@ -78,6 +84,7 @@ The existing 72 Node tests passed after the router change; lint/typecheck and pr
 - [ ] Inspect the generated Vercel preview, logs, response headers and direct refreshes using [DEPLOYMENT.md](docs/DEPLOYMENT.md).
 - [ ] Review viewport screenshots and complete manual accessibility/cross-browser checks; optimize large raster assets.
 - [ ] Review compatible minimatch/tooling remediation and historical secret scanning.
-- [ ] Obtain hosted CI results, PR review and integration approval; then prepare the separately authorized develop-to-main release PR.
+- [x] Confirm hosted CI success for implementation commit `bfccf18` and open draft PR #12.
+- [ ] Obtain review and integration approval; then prepare the separately authorized develop-to-main release PR. Later documentation commits may trigger another CI run.
 
 Maintenance: use Node 24 and `npm ci`, keep contracts versioned, review audits regularly, keep fiction-only demo data, use CI artifact access controls, and rerun journey tests after changes to persistence/routing/identity. Test commands and scope are in [TESTING.md](docs/TESTING.md). Deployment/environment/rollback steps are in [DEPLOYMENT.md](docs/DEPLOYMENT.md). No production release, merge, force-push or release PR is performed before the required approval.

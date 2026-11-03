@@ -10,7 +10,7 @@ Before live integration, verify the commerce API origin, HTTPS, request/response
 
 ## Vercel setup and preview
 
-The user identified `https://cadna-mart-ecommerce.vercel.app/` as the existing deployment. Repository configuration is prepared, but account connection, dashboard settings and deployment logs have not been inspected. Web-tool checks could not access the supplied URL; this does not establish that it is offline.
+The user identified `https://cadna-mart-ecommerce.vercel.app/` as the existing deployment. Vercel's GitHub comment on [PR #12](https://github.com/cycodedconcept/cadna-mart-ecommerce/pull/12) confirms a connected project and a Ready [preview deployment](https://cadna-mart-ecommerce-git-featur-a975c4-cyrils-projects-d2849141.vercel.app). A Chromium smoke check of that preview redirected to Vercel login; application checks are blocked by hosting authentication. The login response's 200 status/headers do not validate the app or its headers. No protection setting was changed. An authorized project reviewer must sign in and perform the checks below. Dashboard settings and deployment logs remain uninspected. Web-tool checks could not access the supplied production URL; this does not establish that it is offline.
 
 1. In Vercel, open the project connected to `cycodedconcept/cadna-mart-ecommerce`; confirm the repository/root folder containing `package.json` and `vercel.json`.
 2. Use Node 24, the **Vite** preset, `npm ci` for installation, `npm run build` for build, and `dist` as output. `vercel.json` declares the framework/build/output and SPA rewrite. No API secrets or variables are needed for the demo.
