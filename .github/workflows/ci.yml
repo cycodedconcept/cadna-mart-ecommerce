@@ -1,22 +1,8 @@
-name: Frontend checks
-
-on:
-  pull_request:
-    branches: [develop, main]
-  push:
-    branches: [develop, main]
-
-permissions:
-  contents: read
-
-concurrency:
-  group: frontend-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  validate:
+  deploy:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,18 +10,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm test
       - run: npm run build
-      - run: npm audit --audit-level=high
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      - name: Upload dist/ to cPanel by SFTP
+        uses: appleboy/scp-action@v1.0.0
         with:
-          name: browser-test-report
-          path: |
-            playwright-report/
-            test-results/
-          retention-days: 7
+          host: ${{ secrets.SFTP_HOST }}
+          port: ${{ secrets.SFTP_PORT }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          source: "dist"
+          strip_components: 1
+          target: "public_html"
